@@ -56,8 +56,8 @@
                 <ColumnDefinition Width="0.2*"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0"></TextBlock>
-            <Button Grid.Column="1">
+            <TextBlock Grid.Column="0" Text="{Binding FilePath}"></TextBlock>
+            <Button Grid.Column="1" Name="selectBtn" Click="selectBtn_Click">
                 <TextBlock Text="Select file to extract" 
                     HorizontalAlignment="Center" 
                     VerticalAlignment="Center"/>
