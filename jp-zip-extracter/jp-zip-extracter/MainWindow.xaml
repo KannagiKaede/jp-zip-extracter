@@ -73,7 +73,7 @@
                 <ColumnDefinition Width="0.33*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="2">
+            <Button Grid.Column="2" Name="extractBtn" Click="extractBtn_Click">
                 <TextBlock Text="Extract" 
                HorizontalAlignment="Center" 
                VerticalAlignment="Center"/>

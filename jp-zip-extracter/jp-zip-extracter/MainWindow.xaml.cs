@@ -1,5 +1,8 @@
 ﻿using Microsoft.Win32;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -50,6 +53,49 @@ namespace jp_zip_extracter
             }
 
             
+        }
+
+        private void extractBtn_Click(object sender, RoutedEventArgs e)
+        {
+            string zipPath = FilePath;
+            if (zipPath == null) {
+                return;
+            }
+            string extractPath = System.IO.Path.GetDirectoryName(zipPath);
+            
+
+            string folderParentName = System.IO.Path.GetFileNameWithoutExtension(zipPath);
+            string folderParentPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(extractPath, folderParentName));
+
+            if (!extractPath.EndsWith(System.IO.Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                extractPath += System.IO.Path.DirectorySeparatorChar;
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Encoding japaneseEncoding = Encoding.GetEncoding(932);
+            using (ZipArchive archive = ZipFile.Open(zipPath, ZipArchiveMode.Read, japaneseEncoding))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    string fileName = entry.FullName;
+                    string japaneseTextFromString = fileName;
+
+                    string destinationPath = System.IO.Path.GetFullPath(System.IO.Path.Combine(extractPath, japaneseTextFromString));
+
+                    string directoryName = System.IO.Path.GetDirectoryName(destinationPath);
+                    if (!Directory.Exists(directoryName))
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+
+
+
+                    if (!entry.FullName.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (destinationPath.StartsWith(extractPath, StringComparison.Ordinal))
+                            entry.ExtractToFile(destinationPath);
+                    }
+                }
+            }
         }
     }
 }
